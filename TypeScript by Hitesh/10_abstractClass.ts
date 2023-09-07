@@ -46,3 +46,5 @@ class Youtube extends TakePhoto1 {
 }
 
 const loki = new Youtube("test", "test", 3); // is correct
+
+export {};
