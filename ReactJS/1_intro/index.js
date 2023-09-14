@@ -1,32 +1,35 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 
-const heading1 = React.createElement(
-  "h1",
-  {
-    id: "heading1",
-  },
-  "This is heading One"
+const heading = (
+  <h1 id="lokesh" key="name">
+    This is Lokesh Melkani
+  </h1>
 );
 
-const heading2 = React.createElement(
-  "h2",
-  {
-    id: "heading2",
-  },
-  "This is heading Two"
-);
+const InputComponent = () => {
+  return (
+    <div>
+      <input type="datetime" name="" id="" />
+    </div>
+  );
+};
 
-const container = React.createElement(
-  "div",
-  {
-    id: "container",
-  },
-  [heading1, heading2]
-);
-
-// console.log(container);
+const HeaderComponent = () => {
+  return (
+    <div className="outer-div">
+      {heading}
+      {console.log("Hello world")}
+      <h3>{`The result of 2 + 3 is ${2 + 3}`}</h3>
+      <h2>This is another heading</h2>
+      <div className="div-second">
+        <h1>Another h1</h1>
+      </div>
+      <InputComponent />
+    </div>
+  );
+};
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
-root.render(container);
+root.render(<HeaderComponent />);
