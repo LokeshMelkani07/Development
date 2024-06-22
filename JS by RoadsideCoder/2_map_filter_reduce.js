@@ -182,3 +182,31 @@ const finalDetails = students
   }, 0);
 
 console.log(finalDetails); // 279
+
+// Polyfill of Once
+// It is used to run any function only once, if multiple calls are made for same function, it will run only once if we wrap it inside once
+function once(func, context) {
+  let ran;
+
+  return function () {
+    if (func) {
+      // passing any object or arguements to function as parameter
+      ran = func.apply(context || this, arguments);
+      // make it null so that it do not run again
+      func = null;
+    }
+
+    return ran;
+  };
+}
+
+const hello = once((a, b) => {
+  console.log("hello ", a, b);
+});
+
+hello(1, 2);
+hello(1, 2);
+hello(1, 2);
+hello(1, 2);
+hello(1, 2);
+// gives output only one time

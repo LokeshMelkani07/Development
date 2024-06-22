@@ -666,6 +666,7 @@ promRecursive([
 // 10: Polyfill of Promises
 
 function PromisePolyFill(executor) {
+  // onResolve and onReject are function to be executed for .then and .catch
   let onResolve,
     onReject,
     fulfilled = false,
@@ -687,9 +688,12 @@ function PromisePolyFill(executor) {
 
   function reject(reason) {
     rejected = true;
+    // value is reject(100) so this 100 is that value = reason below which need to be there to be paased to .catch
     value = reason;
 
+    // if onReject is not rejected yet means its still a variable because inside this.catch we do onReject = callback; then it becomes a function
     if (typeof onReject === "function") {
+      // if its a function means its been already reject so go inside .catch with the value and mark it called
       onReject(value);
       called = true;
     }
@@ -708,6 +712,7 @@ function PromisePolyFill(executor) {
   };
 
   this.catch = function (callback) {
+    // inside .catch((we take a function so callback is that function here which will be passed to onReject))
     onReject = callback;
 
     if (rejected && !called) {
@@ -717,6 +722,7 @@ function PromisePolyFill(executor) {
     return this;
   };
 
+  // To tackle the errors, we use try-catch and executer is the function which is new Promise(ye vala function => {})
   try {
     executor(resolve, reject);
   } catch (error) {
@@ -739,7 +745,18 @@ promise13.then((res) => {
 // Implementing PromisePolyFill.resolve and PromisePolyFill.reject
 // resolve and reject are simple which will return a PromisePolyfill object having an executor which will either resolve or reject.
 
+// Whenever we call  resolve, we call it with a function inside .then
+// for reject, we give that function inside .catch
+/*
+const promise1 = Promise.resolve(123);
+
+promise1.then((value) => {
+  console.log(value);
+  Expected output: 123
+});
+*/
 PromisePolyFill.resolve = (val) =>
+  // we return a promise which can go inside .then or .catch and implement the prmoise1.then((ye vala function) => {})
   new PromisePolyFill(function executor(resolve, _reject) {
     resolve(val);
   });
@@ -750,6 +767,7 @@ PromisePolyFill.reject = (reason) =>
   });
 
 // Promise.all Polyfill
+// The Promise.all() static method takes an iterable of promises as input and returns a single Promise. This returned promise fulfills when all of the input's promises fulfill (including when an empty iterable is passed), with an array of the fulfillment values. It rejects when any of the input's promises rejects, with this first rejection reason.
 /*
 Promise.all takes an array of promises as an input, and returns a single Promise that resolves to an array of the results of the input promises.
 
@@ -832,17 +850,23 @@ function allSettled(promises) {
     If no promises in the iterable fulfill (if all of the given promises are rejected), then the returned promise is rejected with an AggregateError, a new subclass of Error that groups together individual errors.
 */
 
+// JavaScript Promise any() method is a static method that takes an array of promises as a parameter and returns the first fulfilled promise. It returns a rejected value when all of the promises in the array return rejects or if the array is empty. When all the promises are rejected an AggregateError is returned which contains the reason for rejection.
 function any(promises) {
   let results = [];
   var counter = 0;
 
+  // Promise.any() takes an array of promises in the parameters
+  // We will traverse to each promise and will see which one gets fulfilled first and as soon as any gets fulfilled, we store it in result array and return it
   return new Promise((resolve, reject) => {
     promises.forEach((p, index) => {
+      // if promise gets fulfilled, we simply resolve it
       p.then((result) => {
         resolve(result);
       }).catch((err) => {
+        // if its gets rejected we store the error value and do counter++
         results.push(err);
         ++counter;
+        // if anytime counter== parameterArray.length means all are rejected so reject the promise and give the result array with error values of all rejected values
         if (counter === promises.length) {
           reject(results);
         }

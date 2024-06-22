@@ -244,7 +244,6 @@ console.log(d.greeting); // Hello
 // Both {a:1} are different object and are pointing to different block in the memory
 // Objects are only equal if they refer to particular part in the memory
 console.log({ a: 1 } == { a: 1 }); // false
-console.log({ a: 1 } === { a: 1 }); // false
 
 // 13: What is the output
 // we are passing members[0] = person

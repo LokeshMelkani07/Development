@@ -228,6 +228,7 @@ Function.prototype.myCall = function (context = {}, ...args) {
   }
 
   // we store function named fn inside our context object which points to 'this'
+  // like we are putting that function inside that object like obj = {fn:()=>{}}
   context.fn = this;
   // Now we call that fn with arguments passed to our call method
   context.fn(...args);
@@ -276,6 +277,7 @@ Function.prototype.myBind = function (context = {}, ...args) {
 
   context.fnction = this;
   // Return a function for bind()
+  // That function will be passed with some extra parameters so we denote them with newArgs and inside it we call context.function(parameters)
   return function (...newArgs) {
     return context.fnction(...args, ...newArgs);
   };
